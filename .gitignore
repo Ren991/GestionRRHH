@@ -2,7 +2,7 @@
 .vs/
 *.user
 *.suo
-
+.env
 # Node
 node_modules/
 
