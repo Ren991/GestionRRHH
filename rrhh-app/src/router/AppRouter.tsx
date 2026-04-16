@@ -2,7 +2,10 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "../pages/LoginPage";
 import Dashboard from "../pages/Dashboard";
 import { ProtectedRoute } from "../auth/ProtectedRoute";
-// (lo vamos a crear en el próximo paso)
+import CrearVacantePage from "../features/vacantes/pages/CrearVacantePage";
+import VacantesListPage from "../features/vacantes/pages/VacantesListPage";
+import MainLayout from "../components/layout/MainLayout";
+import { PublicRoute } from "../auth/PublicRoute";
 
 export default function AppRouter() {
   return (
@@ -12,15 +15,36 @@ export default function AppRouter() {
         {/* ROOT */}
         <Route path="/" element={<Navigate to="/login" />} />
 
-        {/* LOGIN */}
-        <Route path="/login" element={<LoginPage />} />
+        {/* LOGIN (sin navbar) */}
 
-        {/* ADMIN */}
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>
+          }
+        />
+        {/* ADMIN DASHBOARD */}
         <Route
           path="/admin"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <MainLayout>
+                <Dashboard />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* LISTADO VACANTES */}
+        <Route
+          path="/admin/vacantes"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <VacantesListPage />
+              </MainLayout>
             </ProtectedRoute>
           }
         />
@@ -30,8 +54,10 @@ export default function AppRouter() {
           path="/admin/vacantes/create"
           element={
             <ProtectedRoute>
-{/*               <CrearVacantePage />
- */}            </ProtectedRoute>
+              <MainLayout>
+                <CrearVacantePage />
+              </MainLayout>
+            </ProtectedRoute>
           }
         />
 

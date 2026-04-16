@@ -5,8 +5,12 @@ import {
   Grid,
   Paper
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
+  const navigate = useNavigate();
+
+
   return (
     <Box
       sx={{
@@ -40,8 +44,25 @@ export default function Dashboard() {
             px: 3,
             fontWeight: "bold"
           }}
+            onClick={() => navigate("/admin/vacantes/create")}
+
         >
           Nueva Vacante
+        </Button>
+
+        <Button
+          variant="contained"
+/*           startIcon={<AddIcon />}
+ */          sx={{
+            background: "linear-gradient(90deg, #A78BFA, #F9A8D4)",
+            borderRadius: 3,
+            px: 3,
+            fontWeight: "bold"
+          }}
+            onClick={() => navigate("/admin/vacantes")}
+
+        >
+         Listado Vacantes
         </Button>
       </Box>
 

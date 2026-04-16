@@ -2,7 +2,7 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "./AuthProvider";
 import { CircularProgress, Box } from "@mui/material";
 
-export function ProtectedRoute({ children }: any) {
+export function PublicRoute({ children }: any) {
   const { user, loading } = useAuth();
 
   if (loading) {
@@ -13,8 +13,8 @@ export function ProtectedRoute({ children }: any) {
     );
   }
 
-  if (!user) {
-    return <Navigate to="/login" />;
+  if (user) {
+    return <Navigate to="/admin" />;
   }
 
   return children;
