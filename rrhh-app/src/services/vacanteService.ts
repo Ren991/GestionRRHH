@@ -1,5 +1,5 @@
 import { db } from "../firebase/firebase";
-import { collection, addDoc, getDocs, updateDoc, doc, deleteDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs, updateDoc, doc, deleteDoc, getDoc } from "firebase/firestore";
 
 export interface Vacante {
   titulo: string;
@@ -35,6 +35,7 @@ export const createVacante = async (vacante: Vacante) => {
 
 export const getVacantes = async () => {
   const snapshot = await getDocs(collection(db, "vacantes"));
+  console.log(snapshot);
 
   return snapshot.docs.map((doc) => ({
     id: doc.id,
@@ -55,4 +56,11 @@ export const deleteVacante = async (id: string) => {
 export const toggleVacante = async (id: string, activa: boolean) => {
   const ref = doc(db, "vacantes", id);
   await updateDoc(ref, { activa });
+};
+
+export const getVacanteById = async (id: string) => {
+  const ref = doc(db, "vacantes", id);
+  const snap = await getDoc(ref);
+
+  return { id: snap.id, ...snap.data() };
 };

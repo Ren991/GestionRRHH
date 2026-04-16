@@ -73,14 +73,14 @@ export default function VacantesListPage() {
     }
   };
 
-  /*  const filtered = vacantes.filter((v) =>
-     v.titulo.toLowerCase().includes(filter.toLowerCase())
-   );
-  */
+
   const filtered = vacantes.filter((v) => {
-    const matchesText = v.titulo
-      .toLowerCase()
-      .includes(filter.toLowerCase());
+    const search = filter.toLowerCase();
+
+    const matchesText =
+      v.titulo.toLowerCase().includes(search) ||
+      v.ubicacion.toLowerCase().includes(search) ||
+      v.seniority.toLowerCase().includes(search);
 
     const matchesEstado =
       estadoFilter === "todos" ||

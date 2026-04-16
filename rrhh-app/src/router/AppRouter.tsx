@@ -6,6 +6,7 @@ import CrearVacantePage from "../features/vacantes/pages/CrearVacantePage";
 import VacantesListPage from "../features/vacantes/pages/VacantesListPage";
 import MainLayout from "../components/layout/MainLayout";
 import { PublicRoute } from "../auth/PublicRoute";
+import EditVacantePage from "../features/vacantes/pages/EditVacantePage";
 
 export default function AppRouter() {
   return (
@@ -49,6 +50,16 @@ export default function AppRouter() {
           }
         />
 
+        <Route
+          path="/admin/vacantes/edit/:id"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <EditVacantePage />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
         {/* CREAR VACANTE */}
         <Route
           path="/admin/vacantes/create"
