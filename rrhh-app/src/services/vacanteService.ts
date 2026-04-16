@@ -1,5 +1,5 @@
 import { db } from "../firebase/firebase";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, addDoc, getDocs, updateDoc, doc, deleteDoc } from "firebase/firestore";
 
 export interface Vacante {
   titulo: string;
@@ -40,4 +40,19 @@ export const getVacantes = async () => {
     id: doc.id,
     ...doc.data()
   }));
+};
+
+export const updateVacante = async (id: string, data: any) => {
+  const ref = doc(db, "vacantes", id);
+  await updateDoc(ref, data);
+};
+
+export const deleteVacante = async (id: string) => {
+  const ref = doc(db, "vacantes", id);
+  await deleteDoc(ref);
+};
+
+export const toggleVacante = async (id: string, activa: boolean) => {
+  const ref = doc(db, "vacantes", id);
+  await updateDoc(ref, { activa });
 };
