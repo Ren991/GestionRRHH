@@ -48,9 +48,18 @@ export const updateVacante = async (id: string, data: any) => {
   await updateDoc(ref, data);
 };
 
-export const deleteVacante = async (id: string) => {
+/*export const deleteVacante = async (id: string) => {
   const ref = doc(db, "vacantes", id);
   await deleteDoc(ref);
+};*/
+
+export const deleteVacante = async (id: string) => {
+  const ref = doc(db, "vacantes", id);
+
+  await updateDoc(ref, {
+    activa: false,
+    fechaCierre: new Date()
+  });
 };
 
 export const toggleVacante = async (id: string, activa: boolean) => {

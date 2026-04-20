@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getVacantes, toggleVacante } from "../../../services/vacanteService";
+import { getVacantes, toggleVacante, deleteVacante } from "../../../services/vacanteService";
 import {
   Box,
   TextField,
@@ -34,7 +34,9 @@ export default function VacantesListPage() {
     setLoading(true);
     try {
       const data = await getVacantes();
-      setVacantes(data);
+      const abiertas = data.filter((v: any) => !v.fechaCierre);
+
+      setVacantes(abiertas);
     } catch (error) {
       console.error("Error al obtener vacantes:", error);
     } finally {
@@ -42,10 +44,37 @@ export default function VacantesListPage() {
     }
   };
 
-  const handleDelete = (id: string) => {
-    console.log("delete", id);
-    // TODO: implementar delete
-  };
+ const handleDelete = async (id: string) => {
+  const result = await Swal.fire({
+    title: "¿Cerrar vacante?",
+    text: "La vacante dejará de estar visible",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#A78BFA",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Sí, cerrar",
+    cancelButtonText: "Cancelar"
+  });
+
+  if (!result.isConfirmed) return;
+
+  try {
+    await deleteVacante(id);
+
+    // 🔥 actualización local (sin refetch)
+    setVacantes((prev) =>
+      prev.map((v) =>
+        v.id === id
+          ? { ...v, activa: false, fechaCierre: new Date() }
+          : v
+      )
+    );
+
+    Swal.fire("Cerrada", "La vacante fue cerrada", "success");
+  } catch (error) {
+    Swal.fire("Error", "No se pudo cerrar la vacante", "error");
+  }
+};
 
   const handleToggle = async (id: string, activa: boolean) => {
     try {
@@ -75,6 +104,8 @@ export default function VacantesListPage() {
 
 
   const filtered = vacantes.filter((v) => {
+    const notClosed = !v.fechaCierre;
+
     const search = filter.toLowerCase();
 
     const matchesText =
@@ -91,7 +122,7 @@ export default function VacantesListPage() {
       seniorityFilter === "todos" ||
       v.seniority === seniorityFilter;
 
-    return matchesText && matchesEstado && matchesSeniority;
+    return notClosed && matchesText && matchesEstado && matchesSeniority;
   });
   const columns: GridColDef[] = [
     { field: "titulo", headerName: "Título", flex: 1 },
