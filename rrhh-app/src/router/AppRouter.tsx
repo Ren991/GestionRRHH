@@ -7,6 +7,7 @@ import VacantesListPage from "../features/vacantes/pages/VacantesListPage";
 import MainLayout from "../components/layout/MainLayout";
 import { PublicRoute } from "../auth/PublicRoute";
 import EditVacantePage from "../features/vacantes/pages/EditVacantePage";
+import VacantePublicPage from "../features/vacantes/pages/VacantePublicPage";
 
 export default function AppRouter() {
   return (
@@ -16,6 +17,11 @@ export default function AppRouter() {
         {/* ROOT */}
         <Route path="/" element={<Navigate to="/login" />} />
 
+        {/* VACANTE PÚBLICA (CANDIDATO) */}
+        <Route
+          path="/vacantes/:id"
+          element={<VacantePublicPage />}
+        />
         {/* LOGIN (sin navbar) */}
 
         <Route

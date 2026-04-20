@@ -1,5 +1,5 @@
 import { db } from "../firebase/firebase";
-import { collection, addDoc, getDocs, updateDoc, doc, deleteDoc, getDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs, updateDoc, doc, deleteDoc, getDoc , setDoc} from "firebase/firestore";
 
 export interface Vacante {
   titulo: string;
@@ -17,7 +17,10 @@ const generateSlug = (titulo: string) => {
 };
 
 export const createVacante = async (vacante: Vacante) => {
+  const docRef = doc(collection(db, "vacantes"));
+
   const newVacante = {
+    id: docRef.id,
     ...vacante,
     activa: true,
     fechaCreacion: new Date(),
@@ -25,14 +28,10 @@ export const createVacante = async (vacante: Vacante) => {
     slug: generateSlug(vacante.titulo)
   };
 
-  const docRef = await addDoc(collection(db, "vacantes"), newVacante);
+  await setDoc(docRef, newVacante);
 
-  return {
-    id: docRef.id,
-    ...newVacante
-  };
+  return newVacante;
 };
-
 export const getVacantes = async () => {
   const snapshot = await getDocs(collection(db, "vacantes"));
   console.log(snapshot);
