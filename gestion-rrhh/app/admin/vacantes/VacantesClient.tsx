@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import FormVacante from "@/app/components/FormVacante";
+import Link from "next/link";
 
 interface VacantesClientProps {
   initialRows: any[];
@@ -152,9 +153,15 @@ export default function VacantesClient({ initialRows }: VacantesClientProps) {
                 </div>
                 
                 <div className="mt-4 md:mt-0 flex gap-4 w-full md:w-auto justify-end">
-                  <button className="text-xs font-bold text-[#a5a5a5] hover:text-[#7d84b2] transition-colors px-2">
+                  {/* <button  className="text-xs font-bold text-[#a5a5a5] hover:text-[#7d84b2] transition-colors px-2">
                     Postulantes
-                  </button>
+                  </button> */}
+<Link 
+  href={`/admin/postulantes?vacanteId=${v.id}`}
+  className="px-4 py-2 bg-[#e6e9ff] text-[#7d84b2] text-[10px] font-black uppercase rounded-full hover:bg-[#ffdce0] transition-colors"
+>
+  Ver Postulantes
+</Link>
                   <button 
                     onClick={() => handleEdit(v)}
                     className="px-6 py-2 bg-white/50 rounded-full text-xs font-bold text-[#7d84b2] border border-white hover:bg-[#e6e9ff] transition-all shadow-sm"
