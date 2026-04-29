@@ -1,11 +1,13 @@
 "use client";
+import { useState } from "react";
 import { useActionState } from "react";
 import { enviarPostulacion } from "@/app/actions/postulaciones";
 import { motion } from "framer-motion";
 
 export default function FormPostulacion({ vacanteId }: { vacanteId: string }) {
   const [state, formAction, isPending] = useActionState(enviarPostulacion, null);
-
+  const [aceptaTerminos, setAceptaTerminos] = useState(false);
+  
   if (state?.success) {
     return (
       <motion.div 
@@ -56,9 +58,20 @@ export default function FormPostulacion({ vacanteId }: { vacanteId: string }) {
           {state.error}
         </motion.p>
       )}
-
+<div className="flex items-start gap-3 px-4 py-3 bg-white/40 rounded-2xl border border-white/50">
+  <input 
+    type="checkbox" 
+    id="terminos"
+    checked={aceptaTerminos}
+    onChange={(e) => setAceptaTerminos(e.target.checked)}
+    className="mt-1 accent-[#7d84b2] cursor-pointer"
+  />
+  <label htmlFor="terminos" className="text-[9px] text-[#7d84b2] leading-tight cursor-pointer font-medium uppercase tracking-wider">
+    Acepto que mis datos sean tratados para fines de reclutamiento según la Ley 25.326 de Protección de Datos Personales de Argentina.
+  </label>
+</div>
       <button 
-        disabled={isPending}
+        disabled={!aceptaTerminos||isPending}
         className="w-full py-4 bg-gradient-to-r from-[#ffdce0] to-[#e6e9ff] text-[#7d84b2] font-black uppercase tracking-widest text-xs rounded-2xl shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50"
       >
         {isPending ? "Procesando..." : "Enviar Postulación"}
@@ -78,3 +91,7 @@ function InputGroup({ label, ...props }: any) {
     </div>
   );
 }
+
+/* function useState(arg0: boolean): [any, any] {
+  throw new Error("Function not implemented.");
+} */
