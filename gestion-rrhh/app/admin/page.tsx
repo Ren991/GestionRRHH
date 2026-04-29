@@ -5,7 +5,7 @@ export default function AdminDashboard() {
     <div className="p-8 max-w-6xl mx-auto">
       <header className="mb-12">
         <h1 className="text-4xl font-serif text-[#7d84b2] italic">Panel de Control</h1>
-        <p className="text-gray-400 uppercase tracking-widest text-xs mt-2">Bienvenido al corazón del búnker</p>
+        <p className="text-gray-400 uppercase tracking-widest text-xs mt-2">Bienvenid@</p>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
