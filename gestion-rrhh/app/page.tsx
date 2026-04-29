@@ -7,7 +7,7 @@ export default async function TestPage() {
     // Intentamos una consulta simple
     const result = await turso.execute("SELECT 1 + 1 as test");
     if (result) {
-      status = "✅ ¡Conexión Exitosa con Turso! El búnker está en línea.";
+      status = "✅ ¡Conexión Exitosa con Turso! En línea.";
     }
   } catch (error) {
     console.error(error);

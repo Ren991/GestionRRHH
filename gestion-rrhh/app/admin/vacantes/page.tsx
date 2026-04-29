@@ -14,7 +14,7 @@ export default async function VacantesPage() {
       <div className="max-w-6xl mx-auto">
         <header className="mb-12">
           <h1 className="text-4xl font-serif text-[#7d84b2] italic">Gestión de Vacantes</h1>
-          <p className="text-gray-400 uppercase tracking-widest text-[10px] mt-2">Búnker de Talento • Rosario 2026</p>
+          <p className="text-gray-400 uppercase tracking-widest text-[10px] mt-2">Gestión de Talento • Rosario 2026</p>
         </header>
 
         {/* Le pasamos los datos al componente interactivo */}

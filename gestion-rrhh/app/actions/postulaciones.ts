@@ -60,7 +60,7 @@ export async function enviarPostulacion(prevState: any, formData: FormData) {
     return { success: true };
 
   } catch (e) {
-    console.error("Error en el búnker:", e);
+    console.error("Error :", e);
     return { error: "Hubo un fallo técnico al procesar tu postulación." };
   }
 }

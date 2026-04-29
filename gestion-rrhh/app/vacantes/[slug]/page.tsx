@@ -52,7 +52,7 @@ export default async function DetalleVacantePage({ params }: PageProps) {
             <div className="sticky top-12">
               <div className="mb-6 ml-4">
                 <h2 className="text-xl font-serif text-[#7d84b2] italic">Postulate ahora</h2>
-                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Completa tus datos de búnker</p>
+                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Completa tus datos</p>
               </div>
               <FormPostulacion vacanteId={String(vacante.id)} />
             </div>

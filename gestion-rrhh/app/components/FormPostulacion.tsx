@@ -15,7 +15,7 @@ export default function FormPostulacion({ vacanteId }: { vacanteId: string }) {
       >
         <div className="text-5xl mb-4">✨</div>
         <h3 className="text-2xl font-serif text-[#7d84b2] italic">¡Postulación Enviada!</h3>
-        <p className="text-gray-500 mt-2 text-sm">Tu perfil ya está en nuestro búnker. ¡Éxitos!</p>
+        <p className="text-gray-500 mt-2 text-sm">Tu perfil ya fué enviado. ¡Éxitos!</p>
       </motion.div>
     );
   }
@@ -61,7 +61,7 @@ export default function FormPostulacion({ vacanteId }: { vacanteId: string }) {
         disabled={isPending}
         className="w-full py-4 bg-gradient-to-r from-[#ffdce0] to-[#e6e9ff] text-[#7d84b2] font-black uppercase tracking-widest text-xs rounded-2xl shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50"
       >
-        {isPending ? "Procesando búnker..." : "Enviar Postulación"}
+        {isPending ? "Procesando..." : "Enviar Postulación"}
       </button>
     </form>
   );
