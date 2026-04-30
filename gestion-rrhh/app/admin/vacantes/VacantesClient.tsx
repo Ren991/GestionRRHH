@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import FormVacante from "@/app/components/FormVacante";
 import Link from "next/link";
+import Swal from "sweetalert2";
 
 interface VacantesClientProps {
   initialRows: any[];
@@ -39,7 +40,7 @@ export default function VacantesClient({ initialRows }: VacantesClientProps) {
     
     navigator.clipboard.writeText(urlPublica)
       .then(() => {
-        alert("¡Link copiado al portapapeles!"); // O podés usar un toast más elegante
+        Swal.fire("¡Link copiado al portapapeles!"); // O podés usar un toast más elegante
       })
       .catch(err => {
         console.error("Error al copiar: ", err);
