@@ -61,6 +61,19 @@ export default function FormVacante({ vacanteParaEditar, onSuccess }: FormVacant
           />
         </div>
       </div>
+      <div className="space-y-2">
+  <label className="text-xs text-[#7d84b2] ml-2 uppercase font-bold">
+    Ubicación (Remoto, Híbrido, Ciudad...)
+  </label>
+  <input
+    type="text"
+    name="ubicacion"
+    placeholder="Ej: Remoto, Rosario, Híbrido (CABA)"
+                className="w-full p-3 rounded-xl bg-white border-none shadow-inner text-gray-500" 
+
+    required
+  />
+</div>
 
       <div>
         <label className="text-xs text-[#7d84b2] ml-2 uppercase font-bold">Descripción</label>

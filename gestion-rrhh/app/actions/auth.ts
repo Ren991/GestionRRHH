@@ -10,7 +10,6 @@ export async function handleLogin(prevState: any, formData: FormData) {
   const isOk = await login(user, pass);
 
   if (isOk) {
-    console.log("entro")
     redirect("/admin");
   } else {
     return { error: "Las credenciales no coinciden." };

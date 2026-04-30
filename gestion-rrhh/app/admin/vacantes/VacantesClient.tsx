@@ -33,6 +33,19 @@ export default function VacantesClient({ initialRows }: VacantesClientProps) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const copiarLink = (slug: string) => {
+    // Construimos la URL basada en la ubicación actual del navegador
+    const urlPublica = `${window.location.origin}/vacantes/${slug}`;
+    
+    navigator.clipboard.writeText(urlPublica)
+      .then(() => {
+        alert("¡Link copiado al portapapeles!"); // O podés usar un toast más elegante
+      })
+      .catch(err => {
+        console.error("Error al copiar: ", err);
+      });
+  };
+
   // Función para cerrar y resetear estados
   const handleCloseForm = () => {
     setShowForm(false);
@@ -156,6 +169,17 @@ export default function VacantesClient({ initialRows }: VacantesClientProps) {
                   {/* <button  className="text-xs font-bold text-[#a5a5a5] hover:text-[#7d84b2] transition-colors px-2">
                     Postulantes
                   </button> */}
+                  <button
+                  onClick={() => copiarLink(v.slug)}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#e6e9ff] hover:bg-[#7d84b2] hover:text-white text-[#7d84b2] rounded-xl text-[10px] font-black uppercase tracking-tighter transition-all active:scale-95"
+                  title="Copiar link para compartir"
+                >
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                  </svg>
+                  Copiar Link
+                </button>
+
 <Link 
   href={`/admin/postulantes?vacanteId=${v.id}`}
   className="px-4 py-2 bg-[#e6e9ff] text-[#7d84b2] text-[10px] font-black uppercase rounded-full hover:bg-[#ffdce0] transition-colors"

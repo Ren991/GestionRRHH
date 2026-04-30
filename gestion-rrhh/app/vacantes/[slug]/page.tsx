@@ -3,24 +3,26 @@ import { turso } from "@/lib/turso";
 import FormPostulacion from "@/app/components/FormPostulacion";
 import { notFound } from "next/navigation";
 
-// Definimos la interfaz para los params (ahora son una Promise)
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
 export default async function DetalleVacantePage({ params }: PageProps) {
-  // 1. ESPERAR a que los params se resuelvan (Vital en Next.js 15+)
-  const resolvedParams = await params;
-  const slug = resolvedParams.slug;
+  // 1. Resolvemos el slug
+  const { slug } = await params;
 
-  // 2. Ahora sí, usamos el slug que ya es un string
+  // 2. Consulta a Turso
   const { rows } = await turso.execute({
-    sql: "SELECT * FROM vacantes WHERE slug = ? AND activa = 1",
+    sql: "SELECT id, titulo, seniority, descripcion,ubicacion, slug FROM vacantes WHERE slug = ? AND activa = 1",
     args: [slug]
   });
 
-  const vacante = rows[0];
-  if (!vacante) notFound();
+  const vacanteRaw = rows[0];
+  if (!vacanteRaw) notFound();
+
+  // 3. LIMPIEZA DE OBJETO: Crucial para pasar datos a componentes de cliente (como FormPostulacion)
+  // Esto evita el error "Only plain objects can be passed..."
+  const vacante = JSON.parse(JSON.stringify(vacanteRaw));
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#fff5f5] via-[#f0f4ff] to-[#f9f0ff] p-6 md:p-12">
@@ -30,19 +32,24 @@ export default async function DetalleVacantePage({ params }: PageProps) {
           {/* Columna Izquierda: Info */}
           <div className="lg:col-span-7 space-y-8">
             <header>
-              <span className="px-4 py-1 bg-white/60 rounded-full text-[10px] font-black text-[#7d84b2] uppercase tracking-[0.2em] border border-white">
-                {String(vacante.seniority)}
-              </span>
+              <div className="inline-block px-4 py-1 bg-white/60 rounded-full text-[10px] font-black text-[#7d84b2] uppercase tracking-[0.2em] border border-white">
+                {vacante.seniority}
+              </div>
               <h1 className="text-5xl md:text-6xl font-serif text-[#7d84b2] italic mt-6 leading-tight">
-                {String(vacante.titulo)}
+                {vacante.titulo}
+              </h1>
+              <h1 className="text-2xl md:text-2xl font-serif text-[#7d84b2] italic mt-6 leading-tight">
+               📍 {vacante.ubicacion}
               </h1>
               <div className="h-1 w-20 bg-[#ffdce0] mt-6 rounded-full" />
             </header>
 
             <section className="bg-white/20 backdrop-blur-sm p-8 rounded-[2rem] border border-white/50 shadow-sm">
-              <h2 className="text-xs font-black text-[#7d84b2] uppercase tracking-widest mb-4 italic">Descripción del desafío</h2>
+              <h2 className="text-xs font-black text-[#7d84b2] uppercase tracking-widest mb-4 italic">
+                Descripción del desafío
+              </h2>
               <div className="text-[#6c7293] leading-relaxed whitespace-pre-wrap text-sm md:text-base">
-                {String(vacante.descripcion)}
+                {vacante.descripcion}
               </div>
             </section>
           </div>
@@ -52,8 +59,12 @@ export default async function DetalleVacantePage({ params }: PageProps) {
             <div className="sticky top-12">
               <div className="mb-6 ml-4">
                 <h2 className="text-xl font-serif text-[#7d84b2] italic">Postulate ahora</h2>
-                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Completa tus datos</p>
+                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">
+                  Completa tus datos para {vacante.titulo}
+                </p>
               </div>
+              
+              {/* Pasamos el ID limpio al componente de cliente */}
               <FormPostulacion vacanteId={String(vacante.id)} />
             </div>
           </div>

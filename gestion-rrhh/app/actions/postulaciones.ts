@@ -6,15 +6,29 @@ import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { InArgs } from "@libsql/client";
 
-/**
- * Envía una nueva postulación desde el lado del candidato
- */
+
 export async function enviarPostulacion(prevState: any, formData: FormData) {
   const headerList = await headers();
   // Obtenemos la IP para el Rate Limit (3 por día)
   const ip = headerList.get("x-forwarded-for")?.split(',')[0] || "127.0.0.1";
+  
+
+  // Extraemos los campos necesarios para las validaciones iniciales
+  const email = formData.get("email") as string;
+  const vacanteId = formData.get("vacanteId") as string;
 
   try {
+
+    // VALIDACION POR MAIL
+    const { rows: existingMail } = await turso.execute({
+      sql: `SELECT id FROM postulaciones 
+            WHERE email = ? AND vacante_id = ?`,
+      args: [email, vacanteId]
+    });
+
+    if (existingMail.length > 0) {
+      return { error: "Ya existe una postulación registrada con este correo para esta vacante." };
+    }
     // 1. Rate Limit Check: Contamos envíos de esta IP en las últimas 24hs
     const { rows } = await turso.execute({
       sql: `SELECT COUNT(*) as count FROM postulaciones 
@@ -44,15 +58,27 @@ export async function enviarPostulacion(prevState: any, formData: FormData) {
       formData.get("portfolio") as string,
       parseFloat(formData.get("remuneracion") as string) || 0,
       buffer, // El binario para la columna BLOB
-      ip
+      ip,
+      formData.get("ubicacion_candidato") as string,
+
     ];
 
     // 4. Inserción en Turso
     await turso.execute({
       sql: `INSERT INTO postulaciones (
-              id, vacante_id, nombre, email, puesto_actual, 
-              linkedin, portfolio, remuneracion_bruta, cv_blob, ip_address, estado
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pendiente')`,
+              id, 
+              vacante_id, 
+              nombre, 
+              email, 
+              puesto_actual, 
+              linkedin, 
+              portfolio, 
+              remuneracion_bruta, 
+              cv_blob, 
+              ip_address, 
+              ubicacion_candidato,
+              estado
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pendiente')`, // 11 signos '?' + el estado fijo
       args: sqlArgs
     });
 
@@ -108,3 +134,21 @@ export async function descargarCV(id: string) {
   }
 }
 
+/**
+ * Elimina físicamente una postulación de la base de datos
+ */
+export async function eliminarPostulacion(id: string) {
+  try {
+    await turso.execute({
+      sql: "DELETE FROM postulaciones WHERE id = ?",
+      args: [id]
+    });
+
+    // Revalidamos para que la tabla se actualice al toque
+    revalidatePath("/admin/postulaciones");
+    return { success: true };
+  } catch (e) {
+    console.error("Error al eliminar:", e);
+    return { error: "No se pudo eliminar la postulación. Intentalo de nuevo." };
+  }
+}

@@ -6,7 +6,6 @@ export default function Paginacion({ totalPaginas }: { totalPaginas: number }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-console.log("hola")
   const currentPage = Number(searchParams.get("page")) || 1;
   const currentLimit = searchParams.get("limit") || "10";
 

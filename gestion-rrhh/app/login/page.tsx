@@ -62,7 +62,7 @@ export default function LoginPage() {
             disabled={isPending}
             className="w-full py-4 bg-gradient-to-r from-[#ffdce0] to-[#e6e9ff] text-[#7d84b2] font-bold rounded-full shadow-lg transition-all duration-300 border border-white disabled:opacity-50"
           >
-            {isPending ? "Validando..." : "Entrar con calma"}
+            {isPending ? "Validando..." : "Entrar"}
           </motion.button>
         </form>
       </motion.div>

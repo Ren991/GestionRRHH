@@ -28,19 +28,19 @@ export default function FormPostulacion({ vacanteId }: { vacanteId: string }) {
       <input type="hidden" name="vacanteId" value={vacanteId} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <InputGroup name="nombre" label="Nombre y Apellido" placeholder="Ej: Renzo Beccari" required />
+        <InputGroup name="nombre" label="Nombre y Apellido" placeholder="Ej: Juan Perez" required />
         <InputGroup name="email" label="Email" type="email" placeholder="tu@email.com" required />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <InputGroup name="puesto" label="Puesto Actual" placeholder="Full Stack Developer" />
-        <InputGroup name="remuneracion" label="Remuneración Bruta" type="number" placeholder="Ej: 1500000" />
+        <InputGroup name="puesto" label="Puesto Actual" placeholder="Full Stack Developer" required/>
+        <InputGroup name="remuneracion" label="Remuneración " type="number" placeholder="Ej: 1000" required/>
       </div>
 
-      <InputGroup name="linkedin" label="LinkedIn (URL)" placeholder="https://linkedin.com/in/..." />
-      <InputGroup name="portfolio" label="Portfolio / GitHub (URL)" placeholder="https://github.com/..." />
-
-      <div className="space-y-2">
+      <InputGroup name="linkedin" label="LinkedIn (URL)" placeholder="https://linkedin.com/in/..." required/>
+      <InputGroup name="portfolio" label="Portfolio / GitHub (URL)" placeholder="https://github.com/..." required/>
+      <InputGroup name="ubicacion_candidato" label="Ubicación Actual" placeholder="Ciudad, País" required/>
+       <div className="space-y-2">
         <label className="text-[10px] text-[#7d84b2] ml-4 font-black uppercase tracking-[0.2em]">Currículum (PDF)</label>
         <div className="relative group">
           <input 

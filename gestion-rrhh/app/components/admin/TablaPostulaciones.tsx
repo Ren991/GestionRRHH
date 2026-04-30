@@ -3,7 +3,10 @@
 import { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import BotonDescarga from "./BotonDescarga";
-import { actualizarEstadoPostulacion } from "@/app/actions/postulaciones";
+import { eliminarPostulacion,actualizarEstadoPostulacion } from "@/app/actions/postulaciones";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
 
 interface Postulacion {
   id: string;
@@ -16,7 +19,9 @@ interface Postulacion {
   fecha_postulacion: string;
   linkedin?: string;
   vacante_nombre?: string; // Viene del JOIN en SQL
+  ubicacion_candidato?: string;
 }
+const MySwal = withReactContent(Swal);
 
 export default function TablaPostulaciones({ data }: { data: Postulacion[] }) {
   const searchParams = useSearchParams();
@@ -52,6 +57,47 @@ export default function TablaPostulaciones({ data }: { data: Postulacion[] }) {
     });
     return Array.from(mapa.entries());
   }, [data]);
+
+  const confirmarEliminacion = async (id: string, nombre: string) => {
+    const resultado = await MySwal.fire({
+      title: <span className="font-serif italic text-[#7d84b2]">¿Estás seguro?</span>,
+      html: (
+        <p className="text-sm text-gray-500">
+          Estás por eliminar la postulación de <b>{nombre}</b>. 
+          <br />Esta acción es una <b>baja física</b> y no se puede deshacer.
+        </p>
+      ),
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444", // Rojo para peligro
+      cancelButtonColor: "#7d84b2",
+      confirmButtonText: "SÍ, ELIMINAR",
+      cancelButtonText: "CANCELAR",
+      reverseButtons: true,
+      customClass: {
+        popup: "rounded-[2.5rem] border border-white",
+        confirmButton: "rounded-2xl text-[10px] font-black uppercase tracking-widest px-6 py-3",
+        cancelButton: "rounded-2xl text-[10px] font-black uppercase tracking-widest px-6 py-3"
+      }
+    });
+
+    if (resultado.isConfirmed) {
+      const res = await eliminarPostulacion(id);
+      
+      if (res.success) {
+        MySwal.fire({
+          title: "Eliminado",
+          text: "El registro ha sido borrado con éxito.",
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false,
+          customClass: { popup: "rounded-[2.5rem]" }
+        });
+      } else {
+        MySwal.fire("Error", res.error || "No se pudo borrar", "error");
+      }
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -143,7 +189,10 @@ export default function TablaPostulaciones({ data }: { data: Postulacion[] }) {
                   </select>
                 </td>
                 <td className="p-6">
-                  <div className="flex justify-end gap-3">
+                  {/* Un solo contenedor flex para todos los botones */}
+                  <div className="flex justify-end items-center gap-3">
+                    
+                    {/* Botón de LinkedIn */}
                     {p.linkedin && (
                       <a 
                         href={p.linkedin} 
@@ -151,12 +200,28 @@ export default function TablaPostulaciones({ data }: { data: Postulacion[] }) {
                         rel="noopener noreferrer"
                         className="p-2.5 bg-white rounded-full shadow-sm hover:scale-110 transition-transform text-[#7d84b2]"
                       >
-                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                        </svg>
                       </a>
                     )}
+
+                    {/* Botón de Descarga */}
                     <BotonDescarga id={p.id} />
+
+                    {/* Botón de Eliminar */}
+                    <button 
+                      onClick={() => confirmarEliminacion(p.id, p.nombre)}
+                      className="p-2.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-all"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
+
                   </div>
                 </td>
+                
               </tr>
             ))}
           </tbody>

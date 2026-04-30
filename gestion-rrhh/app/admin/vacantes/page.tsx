@@ -1,6 +1,7 @@
 import { turso } from "@/lib/turso";
 import VacantesClient from "./VacantesClient";
 import Paginacion from "@/app/components/admin/Paginacion";
+import Link from "next/link";
 
 export default async function VacantesPage({ 
   searchParams 
@@ -30,6 +31,20 @@ export default async function VacantesPage({
   return (
     <div className="p-8 max-w-7xl mx-auto">
       <header className="mb-8">
+        <Link 
+          href="/admin" 
+          className="inline-flex items-center gap-2 text-[#7d84b2] hover:text-[#5a6192] text-sm font-medium transition-colors mb-4 group"
+        >
+          <svg 
+            className="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" 
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Volver al Panel
+        </Link>
         <h1 className="text-3xl font-serif text-[#7d84b2] italic">Gestión de Vacantes</h1>
         <p className="text-gray-400 text-[10px] font-black uppercase tracking-widest mt-1">
           {totalRegistros > 0 
