@@ -42,8 +42,11 @@ export async function enviarPostulacion(prevState: any, formData: FormData) {
 
     // 2. Procesamiento del Archivo (PDF a Buffer para BLOB)
     const file = formData.get("cv_archivo") as File;
+    const MAX_SIZE = 2 * 1024 * 1024; // 2MB
     if (!file || file.size === 0) return { error: "El archivo CV es obligatorio." };
     
+    if (file.size > MAX_SIZE) return { error: "El archivo CV excede el tamaño máximo permitido (2MB)." };
+
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
