@@ -3,7 +3,17 @@ import TablaPostulaciones from "@/app/components/admin/TablaPostulaciones";
 
 export default async function HistoricoPage() {
   const { rows } = await turso.execute(`
-    SELECT p.*, v.titulo as vacante_nombre 
+    SELECT 
+      p.id, 
+      p.vacante_id, 
+      p.nombre, 
+      p.email, 
+      p.puesto_actual, 
+      p.remuneracion_bruta, 
+      p.estado, 
+      p.fecha_postulacion, 
+      p.linkedin,
+      v.titulo as vacante_nombre 
     FROM postulaciones p 
     LEFT JOIN vacantes v ON p.vacante_id = v.id 
     ORDER BY p.fecha_postulacion DESC

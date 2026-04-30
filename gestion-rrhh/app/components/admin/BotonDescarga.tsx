@@ -11,7 +11,7 @@ export default function BotonDescarga({ id }: { id: string }) {
       const res = await descargarCV(id);
       
       if (!res) {
-        alert("El búnker no encontró el archivo solicitado.");
+        alert("No se encontró el archivo solicitado.");
         return;
       }
 
