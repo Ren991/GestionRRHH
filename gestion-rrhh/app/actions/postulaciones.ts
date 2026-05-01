@@ -155,3 +155,48 @@ export async function eliminarPostulacion(id: string) {
     return { error: "No se pudo eliminar la postulación. Intentalo de nuevo." };
   }
 }
+
+
+/**
+ * Crea una postulación manualmente desde el Panel de Admin
+ */
+export async function crearPostulacionAdmin(formData: FormData) {
+  try {
+    const vacanteId = (formData.get("vacanteId") as string) || null; // Puede ser null
+    const file = formData.get("cv_archivo") as File;
+    
+    let buffer: Buffer | null = null;
+    if (file && file.size > 0) {
+      const arrayBuffer = await file.arrayBuffer();
+      buffer = Buffer.from(arrayBuffer);
+    }
+
+    const id = uuidv4();
+
+    await turso.execute({
+      sql: `INSERT INTO postulaciones (
+              id, vacante_id, nombre, email, puesto_actual, 
+              linkedin, portfolio, ubicacion_candidato, remuneracion_bruta, 
+              cv_blob, ip_address, estado, fecha_postulacion
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'ADMIN_MANUAL', 'Pendiente', CURRENT_TIMESTAMP)`,
+      args: [
+        id,
+        vacanteId,
+        formData.get("nombre") as string,
+        formData.get("email") as string,
+        formData.get("puesto") as string,
+        formData.get("linkedin") as string,
+        formData.get("portfolio") as string,
+        formData.get("ubicacion_candidato") as string,
+        parseFloat(formData.get("remuneracion") as string) || 0,
+        buffer, // BLOB del CV si existe
+      ]
+    });
+
+    revalidatePath("/admin/postulantes");
+    return { success: true };
+  } catch (e) {
+    console.error("Error Admin Insert:", e);
+    return { error: "No se pudo crear el postulante manualmente." };
+  }
+}

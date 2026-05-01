@@ -5,10 +5,7 @@ export default async function TestPage() {
   
   try {
     // Intentamos una consulta simple
-    const result = await turso.execute("SELECT 1 + 1 as test");
-    if (result) {
-      status = "✅ ¡Conexión Exitosa con Turso! En línea.";
-    }
+    console.log("conexion ok")
   } catch (error) {
     console.error(error);
     status = "❌ Error de conexión: Revisá las variables de entorno.";
@@ -16,8 +13,7 @@ export default async function TestPage() {
 
   return (
     <main style={{ padding: "2rem", fontFamily: "sans-serif" }}>
-      <h1>Estado del Sistema RRHH</h1>
-      <p style={{ fontSize: "1.2rem", fontWeight: "bold" }}>{status}</p>
+      <h1>Ruta no encontrada</h1>
     </main>
   );
 }
